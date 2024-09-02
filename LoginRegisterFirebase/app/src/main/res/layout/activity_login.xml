@@ -8,14 +8,6 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/tc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="TC Kimlik No"
-        android:inputType="number"
-        android:layout_marginBottom="8dp"/>
-
-    <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

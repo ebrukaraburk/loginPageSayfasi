@@ -18,6 +18,7 @@ class Login : AppCompatActivity() {
     // Services sınıfını tanımla
     private lateinit var services: Services
 
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)

@@ -39,9 +39,6 @@ class Services(private val context: Context) {
 
 
 
-
-
-
     fun checkStaffLogin(email: String, password: String, onLoginResult: (Boolean) -> Unit) {
         databaseReference.child("staff").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -70,4 +67,8 @@ class Services(private val context: Context) {
             }
         })
     }
+
+
+
+
 }

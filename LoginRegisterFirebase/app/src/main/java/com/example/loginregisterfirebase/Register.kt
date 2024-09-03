@@ -59,10 +59,10 @@ class Register : AppCompatActivity() {
             "password" to password
         )
         
-        databaseReference.child("staff").get().addOnSuccessListener { snapshot ->
+        databaseReference.child("staffs").get().addOnSuccessListener { snapshot ->
             val id = (snapshot.childrenCount + 1).toString()
 
-            databaseReference.child("staff").child(id).setValue(staff)
+            databaseReference.child("staffs").child(id).setValue(staff)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Kayıt başarılı!", Toast.LENGTH_SHORT).show()
                     finish()

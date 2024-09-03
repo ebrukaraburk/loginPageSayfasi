@@ -1,4 +1,3 @@
-// UserAdapter.kt
 package com.example.loginregisterfirebase
 
 import android.view.LayoutInflater
@@ -8,21 +7,20 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class UserAdapter(
-    private val userList: ArrayList<User>,
-    private val onItemClick: (User) -> Unit
-) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(private val userList: List<User>, private val onUserClick: (User) -> Unit) :
+    RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val userNameTextView: TextView = itemView.findViewById(R.id.userName)
-        private val userSurnameTextView: TextView = itemView.findViewById(R.id.userSurname)
-        private val viewDetailsButton: Button = itemView.findViewById(R.id.btnViewDetails)
+        val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
+        val surnameTextView: TextView = itemView.findViewById(R.id.surnameTextView)
+        val examineButton: Button = itemView.findViewById(R.id.examineButton)
 
         fun bind(user: User) {
-            userNameTextView.text = user.name
-            userSurnameTextView.text = user.surname
-            viewDetailsButton.setOnClickListener {
-                onItemClick(user)
+            nameTextView.text = user.name
+            surnameTextView.text = user.surname
+
+            examineButton.setOnClickListener {
+                onUserClick(user)
             }
         }
     }
@@ -37,5 +35,7 @@ class UserAdapter(
         holder.bind(user)
     }
 
-    override fun getItemCount() = userList.size
+    override fun getItemCount(): Int {
+        return userList.size
+    }
 }

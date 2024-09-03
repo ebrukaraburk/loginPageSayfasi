@@ -40,7 +40,7 @@ class Services(private val context: Context) {
 
 
     fun checkStaffLogin(email: String, password: String, onLoginResult: (Boolean) -> Unit) {
-        databaseReference.child("staff").addListenerForSingleValueEvent(object : ValueEventListener {
+        databaseReference.child("staffs").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var isLoginSuccessful = false
 

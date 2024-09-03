@@ -58,8 +58,7 @@ class Register : AppCompatActivity() {
             "surname" to surname,
             "password" to password
         )
-
-        // Önce mevcut kayıt sayısını alıyoruz
+        
         databaseReference.child("staff").get().addOnSuccessListener { snapshot ->
             val id = (snapshot.childrenCount + 1).toString()
 

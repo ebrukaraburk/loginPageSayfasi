@@ -13,7 +13,8 @@ class Register : AppCompatActivity() {
 
     private lateinit var tcEditText: EditText
     private lateinit var emailEditText: EditText
-    private lateinit var fullNameEditText: EditText
+    private lateinit var nameEditText: EditText
+    private lateinit var surnameEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var confirmPasswordEditText: EditText
     private lateinit var registerButton: Button
@@ -24,23 +25,23 @@ class Register : AppCompatActivity() {
 
         databaseReference = FirebaseDatabase.getInstance().reference
 
-        tcEditText = findViewById(R.id.tc)
         emailEditText = findViewById(R.id.email)
-        fullNameEditText = findViewById(R.id.fullName)
+        nameEditText = findViewById(R.id.name)
+        surnameEditText = findViewById(R.id.surname)
         passwordEditText = findViewById(R.id.password)
         confirmPasswordEditText = findViewById(R.id.confirmPassword)
         registerButton = findViewById(R.id.registerBtn)
 
         registerButton.setOnClickListener {
-            val tcTxt = tcEditText.text.toString().trim()
             val emailTxt = emailEditText.text.toString().trim()
-            val fullNameTxt = fullNameEditText.text.toString().trim()
+            val nameTxt = nameEditText.text.toString().trim()
+            val surnameTxt = surnameEditText.text.toString().trim()
             val passwordTxt = passwordEditText.text.toString().trim()
             val confirmPasswordTxt = confirmPasswordEditText.text.toString().trim()
 
-            if (tcTxt.isNotEmpty() && emailTxt.isNotEmpty() && fullNameTxt.isNotEmpty() && passwordTxt.isNotEmpty() && confirmPasswordTxt.isNotEmpty()) {
+            if (emailTxt.isNotEmpty() && nameTxt.isNotEmpty() && surnameTxt.isNotEmpty() && passwordTxt.isNotEmpty() && confirmPasswordTxt.isNotEmpty()) {
                 if (passwordTxt == confirmPasswordTxt) {
-                    registerUser(tcTxt, emailTxt, fullNameTxt, passwordTxt)
+                    registerUser(emailTxt, nameTxt, surnameTxt, passwordTxt)
                 } else {
                     Toast.makeText(this, "Şifreler eşleşmiyor", Toast.LENGTH_SHORT).show()
                 }
@@ -50,21 +51,28 @@ class Register : AppCompatActivity() {
         }
     }
 
-    private fun registerUser(tc: String, email: String, fullName: String, password: String) {
-        val user = mapOf(
+    private fun registerUser(email: String, name: String, surname: String, password: String) {
+        val staffs = mapOf(
             "email" to email,
-            "fullName" to fullName,
-            "password" to password,
-            "tc" to tc
+            "name" to name,
+            "surname" to surname,
+            "password" to password
         )
+        
+        databaseReference.child("staffs").get().addOnSuccessListener { snapshot ->
+            val id = (snapshot.childrenCount + 1).toString()
 
-        databaseReference.child("users").child(email.replace(".", ",")).setValue(user)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Kayıt başarılı!", Toast.LENGTH_SHORT).show()
-                finish()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Kayıt hatası: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
+            databaseReference.child("staffs").child(id).setValue(staffs)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Kayıt başarılı!", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Kayıt hatası: ${it.message}", Toast.LENGTH_SHORT).show()
+                }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Veritabanı hatası: ${it.message}", Toast.LENGTH_SHORT).show()
+        }
     }
+
 }

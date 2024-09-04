@@ -12,36 +12,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginRegisterFirebase"
         tools:targetApi="31">
-
-        <!-- İlk açılacak aktiviteyi buraya tanımlayın -->
+        <activity
+            android:name=".AddTaskActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TaskActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity_task_list"
+            android:exported="false" /> <!-- İlk açılacak aktiviteyi buraya tanımlayın -->
         <activity
             android:name=".KimsinActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".AdminDashboard"
             android:exported="false" />
-
         <activity
             android:name=".YoneticiLogin"
             android:exported="false" />
-
         <activity
             android:name=".Login"
             android:exported="false" />
-
         <activity
             android:name=".Register"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
     </application>
+
 </manifest>

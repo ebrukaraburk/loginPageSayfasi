@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp">
+
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -15,13 +16,6 @@
         android:textStyle="bold"
         android:layout_marginBottom="24dp"
         android:gravity="center" />
-    <EditText
-        android:id="@+id/tc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="TC Kimlik No"
-        android:inputType="number"
-        android:layout_marginBottom="8dp"/>
 
     <EditText
         android:id="@+id/email"
@@ -32,10 +26,18 @@
         android:layout_marginBottom="8dp"/>
 
     <EditText
-        android:id="@+id/fullName"
+        android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Full Name"
+        android:hint="Name"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/surname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Surname"
         android:inputType="textPersonName"
         android:layout_marginBottom="8dp"/>
 

@@ -18,7 +18,6 @@ class Login : AppCompatActivity() {
     // Services sınıfını tanımla
     private lateinit var services: Services
 
-    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -36,7 +35,6 @@ class Login : AppCompatActivity() {
             val passwordTxt = passwordEditText.text.toString().trim()
 
             if (emailTxt.isNotEmpty() && passwordTxt.isNotEmpty()) {
-                // checkLogin yerine services'deki fonksiyonu çağır
                 services.checkStaffLogin(emailTxt, passwordTxt) { isLoginSuccessful ->
                     if (isLoginSuccessful) {
                         Toast.makeText(this, "Giriş başarılı!", Toast.LENGTH_SHORT).show()
@@ -51,8 +49,10 @@ class Login : AppCompatActivity() {
             }
         }
 
+        // Register sayfasına geçiş
         registerTextView.setOnClickListener {
-            startActivity(Intent(this, Register::class.java))
+            val intent = Intent(this, Register::class.java)
+            startActivity(intent)
         }
     }
 }

@@ -5,13 +5,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 
 class Register : AppCompatActivity() {
-    private lateinit var databaseReference: DatabaseReference
+    private lateinit var services: Services
 
-    private lateinit var tcEditText: EditText
     private lateinit var emailEditText: EditText
     private lateinit var nameEditText: EditText
     private lateinit var surnameEditText: EditText
@@ -23,7 +20,7 @@ class Register : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        databaseReference = FirebaseDatabase.getInstance().reference
+        services = Services(this)
 
         emailEditText = findViewById(R.id.email)
         nameEditText = findViewById(R.id.name)
@@ -41,7 +38,10 @@ class Register : AppCompatActivity() {
 
             if (emailTxt.isNotEmpty() && nameTxt.isNotEmpty() && surnameTxt.isNotEmpty() && passwordTxt.isNotEmpty() && confirmPasswordTxt.isNotEmpty()) {
                 if (passwordTxt == confirmPasswordTxt) {
-                    registerUser(emailTxt, nameTxt, surnameTxt, passwordTxt)
+                    services.registerUser(emailTxt, nameTxt, surnameTxt, passwordTxt) { success, message ->
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                        if (success) finish()
+                    }
                 } else {
                     Toast.makeText(this, "Şifreler eşleşmiyor", Toast.LENGTH_SHORT).show()
                 }
@@ -50,29 +50,4 @@ class Register : AppCompatActivity() {
             }
         }
     }
-
-    private fun registerUser(email: String, name: String, surname: String, password: String) {
-        val staffs = mapOf(
-            "email" to email,
-            "name" to name,
-            "surname" to surname,
-            "password" to password
-        )
-        
-        databaseReference.child("staffs").get().addOnSuccessListener { snapshot ->
-            val id = (snapshot.childrenCount + 1).toString()
-
-            databaseReference.child("staffs").child(id).setValue(staffs)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Kayıt başarılı!", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Kayıt hatası: ${it.message}", Toast.LENGTH_SHORT).show()
-                }
-        }.addOnFailureListener {
-            Toast.makeText(this, "Veritabanı hatası: ${it.message}", Toast.LENGTH_SHORT).show()
-        }
-    }
-
 }

@@ -10,6 +10,29 @@ import java.util.*
 class Services(private val context: Context) {
     private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().reference
 
+    fun registerUser(email: String, name: String, surname: String, password: String, onResult: (Boolean, String) -> Unit) {
+        databaseReference.child("staffs").get().addOnSuccessListener { snapshot ->
+            val id = (snapshot.childrenCount + 1).toString()
+
+            val userMap = mapOf(
+                "email" to email,
+                "name" to name,
+                "surname" to surname,
+                "password" to password
+            )
+
+            databaseReference.child("staffs").child(id).setValue(userMap)
+                .addOnSuccessListener {
+                    onResult(true, "Kayıt başarılı!")
+                }
+                .addOnFailureListener {
+                    onResult(false, "Kayıt hatası: ${it.message}")
+                }
+        }.addOnFailureListener {
+            onResult(false, "Veritabanı hatası: ${it.message}")
+        }
+    }
+
     fun checkAdminLogin(email: String, password: String, onLoginResult: (Boolean) -> Unit) {
         databaseReference.child("admins").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {

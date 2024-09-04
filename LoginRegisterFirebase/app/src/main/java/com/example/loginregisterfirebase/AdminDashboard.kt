@@ -1,6 +1,5 @@
 package com.example.loginregisterfirebase
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,9 +17,8 @@ class AdminDashboard : AppCompatActivity() {
     private lateinit var memberAdapter: UserAdapter
     private lateinit var memberList: ArrayList<User>
     private lateinit var databaseReference: DatabaseReference
-    private var selectedUser: User? = null
+    private var selectedUser: User? = null // Seçilen kullanıcıyı tutacak değişken
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_dashboard)
@@ -42,10 +40,8 @@ class AdminDashboard : AppCompatActivity() {
         val addTaskButton: Button = findViewById(R.id.addTaskButton)
         addTaskButton.setOnClickListener {
             selectedUser?.let { user ->
-                // Görev ekleme işlemini başlatmak için yeni bir aktiviteye geç
-                val intent = Intent(this, AddTaskActivity::class.java)
-                intent.putExtra("userEmail", user.email)
-                startActivity(intent)
+                // Görev ekleme işlemini başlat
+                addTaskToUser(user)
             } ?: Toast.makeText(this, "Bir kullanıcı seçin", Toast.LENGTH_SHORT).show()
         }
 
@@ -79,5 +75,11 @@ class AdminDashboard : AppCompatActivity() {
     private fun selectUser(user: User) {
         selectedUser = user
         Toast.makeText(this, "Seçilen kullanıcı: ${user.name} ${user.surname}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun addTaskToUser(user: User) {
+        val intent = Intent(this, AddTaskActivity::class.java)
+        intent.putExtra("selectedUser", user)
+        startActivity(intent)
     }
 }

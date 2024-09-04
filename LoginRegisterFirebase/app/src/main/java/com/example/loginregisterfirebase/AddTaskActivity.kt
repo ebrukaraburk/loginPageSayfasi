@@ -1,81 +1,102 @@
 package com.example.loginregisterfirebase
 
-import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.Button
-import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AddTaskActivity : AppCompatActivity() {
 
-    private lateinit var taskDescriptionEditText: EditText
-    private lateinit var addTaskButton: Button
-    private lateinit var selectedUserTextView: TextView
-    private lateinit var databaseReference: DatabaseReference
-    private var selectedUserEmail: String? = null
+    private lateinit var taskSpinner: Spinner
+    private lateinit var startDateButton: Button
+    private lateinit var endDateButton: Button
+    private lateinit var confirmTaskButton: Button
 
-    @SuppressLint("MissingInflatedId")
+    private lateinit var selectedUser: User
+    private lateinit var databaseReference: DatabaseReference
+
+    private var startDate: String = ""
+    private var endDate: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
 
-        // Firebase referansı
+        // Initialize views
+        taskSpinner = findViewById(R.id.taskSpinner)
+        startDateButton = findViewById(R.id.startDateButton)
+        endDateButton = findViewById(R.id.endDateButton)
+        confirmTaskButton = findViewById(R.id.confirmTaskButton)
+
+        // Get the selected user
+        selectedUser = intent.getSerializableExtra("selectedUser") as User
+
+        // Firebase reference
         databaseReference = FirebaseDatabase.getInstance().reference
 
-        // Görev ekleme ekranındaki view'lar
-        selectedUserTextView = findViewById(R.id.selectedUserTextView)
-        taskDescriptionEditText = findViewById(R.id.taskDescriptionEditText)
-        addTaskButton = findViewById(R.id.addTaskButton)
-
-        // Intent'ten gelen verileri al
-        selectedUserEmail = intent.getStringExtra("userEmail")
-        selectedUserTextView.text = "Seçilen Kullanıcı: $selectedUserEmail"
-
-        // "Görev Ekle" butonuna tıklanıldığında yapılacak işlem
-        addTaskButton.setOnClickListener {
-            val taskDescription = taskDescriptionEditText.text.toString().trim()
-            if (taskDescription.isNotEmpty()) {
-                addTaskToUser(taskDescription)
-            } else {
-                Toast.makeText(this, "Görev tanımını girin", Toast.LENGTH_SHORT).show()
+        // Set listeners
+        startDateButton.setOnClickListener {
+            pickDate { date ->
+                startDate = date
+                startDateButton.text = "Start Date: $date"
             }
+        }
+
+        endDateButton.setOnClickListener {
+            pickDate { date ->
+                endDate = date
+                endDateButton.text = "End Date: $date"
+            }
+        }
+
+        confirmTaskButton.setOnClickListener {
+            addTaskToUser()
         }
     }
 
-    private fun addTaskToUser(taskDescription: String) {
-        selectedUserEmail?.let { email ->
-            // Kullanıcının ID'sine göre Firebase'de görev ekle
-            databaseReference.child("staffs").orderByChild("email").equalTo(email)
-                .get().addOnSuccessListener { dataSnapshot ->
-                    if (dataSnapshot.exists()) {
-                        for (snapshot in dataSnapshot.children) {
-                            val userId = snapshot.key
-                            val taskRef = databaseReference.child("tasks").push()
-                            val taskId = taskRef.key
-                            val taskMap = mapOf(
-                                "description" to taskDescription,
-                                "assigned_to" to email,
-                                "state" to "pending"
-                            )
-                            taskId?.let {
-                                taskRef.setValue(taskMap).addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Toast.makeText(this, "Görev başarıyla eklendi", Toast.LENGTH_SHORT).show()
-                                        finish()
-                                    } else {
-                                        Toast.makeText(this, "Görev eklenirken hata oluştu", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        Toast.makeText(this, "Kullanıcı bulunamadı", Toast.LENGTH_SHORT).show()
-                    }
-                }
+    private fun pickDate(onDateSelected: (String) -> Unit) {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+            val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                .format(Date(selectedYear - 1900, selectedMonth, selectedDay))
+            onDateSelected(date)
+        }, year, month, day)
+        datePickerDialog.show()
+    }
+
+    private fun addTaskToUser() {
+        val selectedTask = taskSpinner.selectedItem.toString()
+
+        if (startDate.isEmpty() || endDate.isEmpty()) {
+            Toast.makeText(this, "Please select both start and end dates", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        val taskData = mapOf(
+            "taskName" to selectedTask,
+            "startDate" to startDate,
+            "endDate" to endDate
+        )
+
+        databaseReference.child("tasks").child(selectedUser.id).push()
+            .setValue(taskData).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    Toast.makeText(this, "Task assigned successfully", Toast.LENGTH_SHORT).show()
+                    finish() // Close the activity
+                } else {
+                    Toast.makeText(this, "Failed to assign task", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }

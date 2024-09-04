@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">LoginRegisterFirebase</string>
+
+    <string-array name="task_list">
+        <item>Proje Sunumu</item>
+        <item>Proje Bitirme Raporu</item>
+        <item>Proje Kaydı</item>
+        <item>Proje Yazılımı</item>
+    </string-array>
 </resources>

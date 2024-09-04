@@ -5,42 +5,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".AddTaskActivity">
+    android:padding="16dp">
 
-    <!-- Seçilen Kullanıcı Bilgisi -->
-    <TextView
-        android:id="@+id/selectedUserTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Seçilen Kullanıcı: "
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="16dp"/>
-
-    <!-- Görev Tanımı EditText -->
-    <EditText
-        android:id="@+id/taskDescriptionEditText"
+    <!-- Task Selection Spinner -->
+    <Spinner
+        android:id="@+id/taskSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Görev Tanımı"
-        android:inputType="text"
-        app:layout_constraintTop_toBottomOf="@id/selectedUserTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:entries="@array/task_list" />
 
-    <!-- Görev Ekle Butonu -->
+    <!-- Start Date Picker -->
     <Button
-        android:id="@+id/addTaskButton"
-        android:layout_width="wrap_content"
+        android:id="@+id/startDateButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Görev Ekle"
-        app:layout_constraintTop_toBottomOf="@id/taskDescriptionEditText"
+        android:text="Select Start Date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/taskSpinner"
+        android:layout_marginTop="16dp"/>
+
+    <!-- End Date Picker -->
+    <Button
+        android:id="@+id/endDateButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Select End Date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/startDateButton"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Add Task Button -->
+    <Button
+        android:id="@+id/confirmTaskButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Add Task"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/endDateButton"
+        android:layout_marginTop="32dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

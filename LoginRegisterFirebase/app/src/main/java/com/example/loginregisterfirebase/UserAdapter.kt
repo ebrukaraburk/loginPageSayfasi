@@ -3,24 +3,22 @@ package com.example.loginregisterfirebase
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class UserAdapter(private val userList: List<User>, private val onUserClick: (User) -> Unit) :
-    RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter(
+    private val userList: List<User>,
+    private val onUserClick: (User) -> Unit
+) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameTextView: TextView = itemView.findViewById(R.id.nameTextView)
-        val surnameTextView: TextView = itemView.findViewById(R.id.surnameTextView)
-        val examineButton: Button = itemView.findViewById(R.id.examineButton)
+        val userNameTextView: TextView = itemView.findViewById(R.id.userNameTextView)
+        val userSurnameTextView: TextView = itemView.findViewById(R.id.userSurnameTextView)
+        val userEmailTextView: TextView = itemView.findViewById(R.id.userEmailTextView)
 
-        fun bind(user: User) {
-            nameTextView.text = user.name
-            surnameTextView.text = user.surname
-
-            examineButton.setOnClickListener {
-                onUserClick(user)
+        init {
+            itemView.setOnClickListener {
+                onUserClick(userList[adapterPosition])
             }
         }
     }
@@ -32,7 +30,9 @@ class UserAdapter(private val userList: List<User>, private val onUserClick: (Us
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = userList[position]
-        holder.bind(user)
+        holder.userNameTextView.text = user.name
+        holder.userSurnameTextView.text = user.surname
+        holder.userEmailTextView.text = user.email
     }
 
     override fun getItemCount(): Int {

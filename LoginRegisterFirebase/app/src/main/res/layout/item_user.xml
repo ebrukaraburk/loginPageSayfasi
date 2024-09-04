@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/nameTextView"
+        android:id="@+id/userNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name"
-        android:layout_weight="1"
-        android:textSize="16sp" />
+        android:text="Ad"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/surnameTextView"
+        android:id="@+id/userSurnameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Surname"
-        android:layout_weight="1"
-        android:textSize="16sp" />
+        android:text="Soyad"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/userNameTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"/>
 
-    <Button
-        android:id="@+id/examineButton"
+    <TextView
+        android:id="@+id/userEmailTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="İncele" />
+        android:text="Email"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/userNameTextView"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

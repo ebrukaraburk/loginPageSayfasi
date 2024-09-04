@@ -1,9 +1,11 @@
 package com.example.loginregisterfirebase
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,19 +18,36 @@ class AdminDashboard : AppCompatActivity() {
     private lateinit var memberAdapter: UserAdapter
     private lateinit var memberList: ArrayList<User>
     private lateinit var databaseReference: DatabaseReference
+    private var selectedUser: User? = null
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_dashboard)
+
+        // Başlık TextView'i
+        val userHeaderTextView: TextView = findViewById(R.id.usersHeaderTextView)
+        userHeaderTextView.text = "Kullanıcılar"
 
         // Kullanıcı RecyclerView ve Adapter kurulumu
         memberRecyclerView = findViewById(R.id.memberRecyclerView)
         memberRecyclerView.layoutManager = LinearLayoutManager(this)
         memberList = ArrayList()
         memberAdapter = UserAdapter(memberList) { user ->
-            viewUserDetails(user)
+            selectUser(user)
         }
         memberRecyclerView.adapter = memberAdapter
+
+        // "Görev Ekle" butonunu tanımla
+        val addTaskButton: Button = findViewById(R.id.addTaskButton)
+        addTaskButton.setOnClickListener {
+            selectedUser?.let { user ->
+                // Görev ekleme işlemini başlatmak için yeni bir aktiviteye geç
+                val intent = Intent(this, AddTaskActivity::class.java)
+                intent.putExtra("userEmail", user.email)
+                startActivity(intent)
+            } ?: Toast.makeText(this, "Bir kullanıcı seçin", Toast.LENGTH_SHORT).show()
+        }
 
         // Firebase referansı
         databaseReference = FirebaseDatabase.getInstance().reference
@@ -38,7 +57,6 @@ class AdminDashboard : AppCompatActivity() {
     }
 
     private fun getUsersFromDatabase() {
-        // "staffs" grubundaki kullanıcıları çek
         databaseReference.child("staffs").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 memberList.clear()
@@ -58,13 +76,8 @@ class AdminDashboard : AppCompatActivity() {
         })
     }
 
-    private fun viewUserDetails(user: User) {
-        // Kullanıcı detaylarını göstermek için gerekli işlemler
-        Toast.makeText(this, "İncele: ${user.name} ${user.surname}", Toast.LENGTH_SHORT).show()
-
-        // Örneğin, yeni bir aktivite başlatabilirsiniz
-        // val intent = Intent(this, UserDetailActivity::class.java)
-        // intent.putExtra("user", user)
-        // startActivity(intent)
+    private fun selectUser(user: User) {
+        selectedUser = user
+        Toast.makeText(this, "Seçilen kullanıcı: ${user.name} ${user.surname}", Toast.LENGTH_SHORT).show()
     }
 }

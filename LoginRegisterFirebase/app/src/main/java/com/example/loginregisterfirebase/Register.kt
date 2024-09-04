@@ -52,7 +52,7 @@ class Register : AppCompatActivity() {
     }
 
     private fun registerUser(email: String, name: String, surname: String, password: String) {
-        val staff = mapOf(
+        val staffs = mapOf(
             "email" to email,
             "name" to name,
             "surname" to surname,
@@ -62,7 +62,7 @@ class Register : AppCompatActivity() {
         databaseReference.child("staffs").get().addOnSuccessListener { snapshot ->
             val id = (snapshot.childrenCount + 1).toString()
 
-            databaseReference.child("staffs").child(id).setValue(staff)
+            databaseReference.child("staffs").child(id).setValue(staffs)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Kayıt başarılı!", Toast.LENGTH_SHORT).show()
                     finish()

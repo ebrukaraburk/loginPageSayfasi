@@ -2,9 +2,10 @@
     <string name="app_name">LoginRegisterFirebase</string>
 
     <string-array name="task_list">
-        <item>Proje Sunumu</item>
-        <item>Proje Bitirme Raporu</item>
-        <item>Proje Kaydı</item>
-        <item>Proje Yazılımı</item>
+        <item>select a task</item>
+        <item>Task a</item>
+        <item>Task b</item>
+        <item>Task c</item>
+        <item>Task d</item>
     </string-array>
 </resources>

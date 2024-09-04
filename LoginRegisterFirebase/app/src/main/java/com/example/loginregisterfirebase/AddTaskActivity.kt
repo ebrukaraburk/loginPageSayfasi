@@ -7,8 +7,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,7 +18,7 @@ class AddTaskActivity : AppCompatActivity() {
     private lateinit var confirmTaskButton: Button
 
     private lateinit var selectedUser: User
-    private lateinit var databaseReference: DatabaseReference
+    private lateinit var services: Services
 
     private var startDate: String = ""
     private var endDate: String = ""
@@ -29,19 +27,15 @@ class AddTaskActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
 
-        // Initialize views
         taskSpinner = findViewById(R.id.taskSpinner)
         startDateButton = findViewById(R.id.startDateButton)
         endDateButton = findViewById(R.id.endDateButton)
         confirmTaskButton = findViewById(R.id.confirmTaskButton)
 
-        // Get the selected user
         selectedUser = intent.getSerializableExtra("selectedUser") as User
 
-        // Firebase reference
-        databaseReference = FirebaseDatabase.getInstance().reference
+        services = Services(this)
 
-        // Set listeners
         startDateButton.setOnClickListener {
             pickDate { date ->
                 startDate = date
@@ -57,7 +51,16 @@ class AddTaskActivity : AppCompatActivity() {
         }
 
         confirmTaskButton.setOnClickListener {
-            addTaskToUser()
+            if (taskSpinner.selectedItem.toString().equals("select a task")) {
+                Toast.makeText(this, "Please Select a task", Toast.LENGTH_SHORT).show()
+            } else {
+                val selectedTask = taskSpinner.selectedItem.toString()
+                services.addTaskToUser(selectedTask, selectedUser, startDate, endDate) { success ->
+                    if (success) {
+                        finish() // Close the activity
+                    }
+                }
+            }
         }
     }
 
@@ -73,30 +76,5 @@ class AddTaskActivity : AppCompatActivity() {
             onDateSelected(date)
         }, year, month, day)
         datePickerDialog.show()
-    }
-
-    private fun addTaskToUser() {
-        val selectedTask = taskSpinner.selectedItem.toString()
-
-        if (startDate.isEmpty() || endDate.isEmpty()) {
-            Toast.makeText(this, "Please select both start and end dates", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val taskData = mapOf(
-            "taskName" to selectedTask,
-            "startDate" to startDate,
-            "endDate" to endDate
-        )
-
-        databaseReference.child("tasks").child(selectedUser.id).push()
-            .setValue(taskData).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    Toast.makeText(this, "Task assigned successfully", Toast.LENGTH_SHORT).show()
-                    finish() // Close the activity
-                } else {
-                    Toast.makeText(this, "Failed to assign task", Toast.LENGTH_SHORT).show()
-                }
-            }
     }
 }
